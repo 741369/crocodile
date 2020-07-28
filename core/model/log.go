@@ -40,12 +40,8 @@ func SaveLog(ctx context.Context, l *define.Log) error {
 	if err != nil {
 		return fmt.Errorf("db.GetConn failed: %w", err)
 	}
+	defer conn.Close()
 	stmt, err := conn.PrepareContext(ctx, savesql)
-	//defer conn.Close()
-	defer func() {
-		stmt.Close()
-		conn.Close()
-	}()
 	if err != nil {
 		return fmt.Errorf("conn.PrepareContext failed: %w", err)
 	}
@@ -108,13 +104,9 @@ func GetLog(ctx context.Context, taskname string, status int, offset, limit int)
 	if err != nil {
 		return logs, 0, fmt.Errorf("db.GetConn failed: %w", err)
 	}
-	//defer conn.Close()
+	defer conn.Close()
 
 	stmt, err := conn.PrepareContext(ctx, getsql)
-	defer func() {
-		stmt.Close()
-		conn.Close()
-	}()
 	if err != nil {
 		return logs, 0, fmt.Errorf("conn.PrepareContext failed: %w", err)
 	}
@@ -300,7 +292,6 @@ func CleanTaskLog(ctx context.Context, name, taskid string, deletetime int64) (i
 	}
 	defer conn.Close()
 	stmt, err := conn.PrepareContext(ctx, delsql)
-	defer stmt.Close()
 	if err != nil {
 		return 0, fmt.Errorf("conn.PrepareContext failed: %w", err)
 	}
@@ -413,10 +404,7 @@ func GetOperate(ctx context.Context, uid, username, method, module string, limit
 		return oplogs, 0, fmt.Errorf("conn.PrepareContext failed: %w", err)
 	}
 	defer stmt.Close()
-
 	rows, err := stmt.QueryContext(ctx, args...)
-	defer stmt.Close()
-
 	if err != nil {
 		return oplogs, 0, fmt.Errorf("stmt.QueryContext failed: %w", err)
 	}
@@ -484,7 +472,6 @@ func SaveNewNotify(ctx context.Context, notify define.Notify) error {
 	defer conn.Close()
 
 	stmt, err := conn.PrepareContext(ctx, savesql)
-	defer stmt.Close()
 	if err != nil {
 		return fmt.Errorf("conn.PrepareContext failed: %w", err)
 	}
@@ -518,7 +505,10 @@ func GetNotifyByUID(ctx context.Context, uid string) ([]define.Notify, error) {
 		return notifys, fmt.Errorf("db.GetConn failed: %w", err)
 	}
 	defer conn.Close()
+<<<<<<< HEAD
 	
+=======
+>>>>>>> fix: close stmt
 	stmt, err := conn.PrepareContext(ctx, getsql)
 	if err != nil {
 		return notifys, fmt.Errorf("conn.PrepareContext failed: %w", err)
