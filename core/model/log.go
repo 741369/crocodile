@@ -404,10 +404,6 @@ func GetOperate(ctx context.Context, uid, username, method, module string, limit
 		return oplogs, 0, fmt.Errorf("conn.PrepareContext failed: %w", err)
 	}
 	defer stmt.Close()
-<<<<<<< HEAD
-=======
-
->>>>>>> add: close rows
 	rows, err := stmt.QueryContext(ctx, args...)
 	if err != nil {
 		return oplogs, 0, fmt.Errorf("stmt.QueryContext failed: %w", err)
@@ -509,10 +505,7 @@ func GetNotifyByUID(ctx context.Context, uid string) ([]define.Notify, error) {
 		return notifys, fmt.Errorf("db.GetConn failed: %w", err)
 	}
 	defer conn.Close()
-<<<<<<< HEAD
 	
-=======
->>>>>>> fix: close stmt
 	stmt, err := conn.PrepareContext(ctx, getsql)
 	if err != nil {
 		return notifys, fmt.Errorf("conn.PrepareContext failed: %w", err)
