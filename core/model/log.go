@@ -404,6 +404,10 @@ func GetOperate(ctx context.Context, uid, username, method, module string, limit
 		return oplogs, 0, fmt.Errorf("conn.PrepareContext failed: %w", err)
 	}
 	defer stmt.Close()
+<<<<<<< HEAD
+=======
+
+>>>>>>> add: close rows
 	rows, err := stmt.QueryContext(ctx, args...)
 	if err != nil {
 		return oplogs, 0, fmt.Errorf("stmt.QueryContext failed: %w", err)
