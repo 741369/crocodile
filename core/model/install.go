@@ -43,7 +43,7 @@ func QueryIsInstall(ctx context.Context) (bool, error) {
 		querytable = `SELECT count(*) FROM sqlite_master WHERE type="table" AND (`
 		queryname = "name"
 	} else if drivename == "mysql" {
-		querytable = `SELECT count(*) FROM information_schema.TABLES WHERE (`
+		querytable = `SELECT count(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'crocodile' AND (`
 		queryname = "table_name"
 	} else {
 		return false, fmt.Errorf("unsupport drive type %s, only support sqlite3 or mysql", drivename)
@@ -121,7 +121,7 @@ func StartInstall(ctx context.Context, username, password string) error {
 			for _, sql := range strings.Split(execsql, ";\n") {
 				_, err = conn.ExecContext(context.Background(), sql)
 				if err != nil {
-					log.Error("conn.ExecContext failed", zap.Error(err))
+					log.Error("conn.ExecContext failed", zap.Error(err), zap.String("sql", sql))
 					return fmt.Errorf("conn.ExecContext failed: %w", err)
 				}
 			}
